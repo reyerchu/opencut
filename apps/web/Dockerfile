@@ -23,6 +23,7 @@ ENV NODE_ENV production
 ENV NEXT_TELEMETRY_DISABLED 1
 
 WORKDIR /app/apps/web
+COPY apps/web/.env apps/web/.env
 RUN bun run build
 
 # Production image
