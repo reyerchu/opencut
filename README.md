@@ -24,6 +24,21 @@
 - No watermarks or subscriptions
 - Analytics provided by [Databuddy](https://www.databuddy.cc?utm_source=opencut), 100% Anonymized & Non-invasive.
 
+## Reyer's Modifications
+
+This fork includes the following modifications by Reyer:
+
+- **Direct Access**: Removed the waitlist requirement - users can now access the video editor directly via "Enter projects" button instead of "Join waitlist"
+- **Custom Port**: Application runs on port 3333 instead of the default 3000
+- **Production Deployment**: Configured for deployment on Apache server with SSL certificates
+- **Domain**: Deployed at `https://opencut.defintek.io`
+
+### Changes Made:
+- Modified `apps/web/src/components/landing/hero.tsx` to replace waitlist form with direct access button
+- Updated Docker configuration to use port 3333
+- Configured Apache reverse proxy for production deployment
+- Added SSL certificate support for HTTPS access
+
 ## Project Structure
 
 - `apps/web/` – Main Next.js web application
@@ -99,7 +114,7 @@ Before you begin, ensure you have the following installed on your system:
 
    # Generate a secure secret for Better Auth
    BETTER_AUTH_SECRET="your-generated-secret-here"
-   BETTER_AUTH_URL="http://localhost:3000"
+   BETTER_AUTH_URL="http://localhost:3333"
 
    # Redis (matches docker-compose.yaml)
    UPSTASH_REDIS_REST_URL="http://localhost:8079"
@@ -135,7 +150,7 @@ Before you begin, ensure you have the following installed on your system:
 5. Run database migrations: `bun run db:migrate` from (inside apps/web)
 6. Start the development server: `bun run dev` from (inside apps/web)
 
-The application will be available at [http://localhost:3000](http://localhost:3000).
+The application will be available at [http://localhost:3333](http://localhost:3333).
 
 ## Contributing
 
