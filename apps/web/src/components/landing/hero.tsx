@@ -2,10 +2,8 @@
 
 import { motion } from "motion/react";
 import { Button } from "../ui/button";
-import { Input } from "../ui/input";
 import { ArrowRight } from "lucide-react";
-import { useState } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation";
 
 import Image from "next/image";
 import { Handlebars } from "./handlebars";
@@ -15,59 +13,10 @@ interface HeroProps {
 }
 
 export function Hero({ signupCount }: HeroProps) {
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
+  const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!email.trim()) {
-      toast({
-        title: "Email required",
-        description: "Please enter your email address.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-
-      const data = (await response.json()) as { error: string };
-
-      if (response.ok) {
-        toast({
-          title: "Welcome to the waitlist! 🎉",
-          description: "You'll be notified when we launch.",
-        });
-        setEmail("");
-      } else {
-        toast({
-          title: "Oops!",
-          description:
-            (data as { error: string }).error ||
-            "Something went wrong. Please try again.",
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Network error",
-        description: "Please check your connection and try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+  const handleEnterProjects = () => {
+    router.push("/projects");
   };
 
   return (
@@ -111,46 +60,17 @@ export function Hero({ signupCount }: HeroProps) {
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6, duration: 0.8 }}
         >
-          <form
-            onSubmit={handleSubmit}
-            className="flex gap-3 w-full max-w-lg flex-col sm:flex-row"
+          <Button
+            onClick={handleEnterProjects}
+            size="lg"
+            className="px-8 h-12 text-lg !bg-foreground hover:!bg-foreground/90"
           >
-            <div className="relative w-full">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="h-11 text-base flex-1"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={isSubmitting}
-                required
-              />
-            </div>
-            <Button
-              type="submit"
-              size="lg"
-              className="px-6 h-11 text-base !bg-foreground"
-              disabled={isSubmitting}
-            >
-              <span className="relative z-10">
-                {isSubmitting ? "Joining..." : "Join waitlist"}
-              </span>
-              <ArrowRight className="relative z-10 ml-0.5 h-4 w-4 inline-block" />
-            </Button>
-          </form>
+            <span className="relative z-10">Enter projects</span>
+            <ArrowRight className="relative z-10 ml-2 h-5 w-5" />
+          </Button>
         </motion.div>
 
-        {signupCount > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8, duration: 0.6 }}
-            className="mt-8 inline-flex items-center gap-2 text-sm text-muted-foreground justify-center"
-          >
-            <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-            <span>{signupCount.toLocaleString()} people already joined</span>
-          </motion.div>
-        )}
+
       </motion.div>
     </div>
   );
